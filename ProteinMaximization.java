@@ -1,20 +1,25 @@
 
-
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class ProteinMaximization {
 
 	public static void main(String[] args) {
-		/*test*/
 		
-		Item[] items = {new Item("Chicken leg", 113, 14), new Item("Tilapia", 100, 20), new Item("Bagel", 260, 9), new Item("Yogurt", 100, 10), new Item("Go Lean cereal", 155, 9), new Item("Bread", 110, 6), new Item("Peanut butter", 90, 4), new Item("Almonds", 61, 2), new Item("Milk", 78, 5), new Item("Egg", 70, 7), new Item("Deli meat", 80, 16), new Item("Salmon", 100, 21), new Item("Chicken breast", 110, 31), new Item("Whey", 110, 25), new Item("Tofu", 130, 16), new Item("Greek yogurt", 100, 18), new Item("Cottage cheese", 110, 14)};
-
-		System.out.println(knapsack(600, items));
-
+		Item[] items = {
+				new Item("Yogurt", 100, 10),
+				new Item("Egg", 70, 7),
+				new Item("Deli meat", 80, 16),
+				new Item("Salmon", 100, 21),
+				new Item("Chicken breast", 110, 31),
+				new Item("Whey", 110, 25),
+				new Item("Tofu", 130, 16),
+				new Item("Greek yogurt", 100, 18),
+				new Item("Cottage cheese", 110, 14),
+				new Item("Skyr", 86, 16)
+		};
 		
-		
-		/*
 		Scanner input = new Scanner(System.in);
 		
 		System.out.println("Enter the number of calories you want to eat:");
@@ -39,18 +44,9 @@ public class ProteinMaximization {
 		}
 		
 		
-		int calCount = 0;
-		int numItems = items.length;
-		
-		
-		Solution s = knapsack(capacity, items);
-		for(Item a : s.getIncluded()){
-				System.out.println(a);
-				calCount += a.getCalories();
-		}
-		s.setFinalCalCount(calCount);
+		Solution s = knapsack2(capacity, items);
 		System.out.println("For a total of " + s.getMaxProtein() + "g in " + s.getFinalCalCount() + " calories");
-*/
+
 	}
 	
 	public static Item[] remove(Item[] arr, String name){
@@ -73,10 +69,11 @@ public class ProteinMaximization {
 		return result;
 	}
 	
-	public static int knapsack(int capacity, Item[] x){
+	public static Solution knapsack(int capacity, Item[] x){
 		
 		int[] sol, mySol;
 	       int i, myFinalSol;
+	       ArrayList<Item> test = new ArrayList<Item>();
 
 	       int[] M;                 // Data structure to store results
 	       int   C;                 // Index to run through M[]
@@ -115,12 +112,14 @@ public class ProteinMaximization {
 	             --------------------------------------------- */
 	          for ( i = 0; i < x.length; i++ )
 	          {
-	             if ( C >= x[i].getCalories() )
+	             if ( C >= x[i].getCalories() ) {
 	                mySol[i] = sol[i] + x[i].getProtein();   // Value is increased by v[i]
 	                                            // because it has item i packed in
 	                                            // it already
-	             else
+	             }
+	             else {
 	                mySol[i] = 0;        // Not enough space to  pack item i
+	             }
 	          }
 
 	          /* *************************
@@ -131,8 +130,62 @@ public class ProteinMaximization {
 	             if ( mySol[i] > M[C] )
 	                 M[C] = mySol[i];
 	       }
+	       
+	       int calCount = 0;
+	       for(Item a : test){
+				System.out.println(a);
+				calCount += a.getCalories();
+	       }
+	       Solution solution = new Solution(test, M[capacity], calCount);
 
-	       return M[capacity];
+	       //return M[capacity];
+	       return solution;
+		
+	}
+	
+	public static Solution knapsack2(int capacity, Item[] items) {
+		
+		int NB_ITEMS = items.length;
+		// we use a matrix to store the max value at each n-th item
+		int[][] matrix = new int[NB_ITEMS + 1][capacity + 1];
+
+		// first line is initialized to 0
+		for (int i = 0; i <= capacity; i++)
+		  matrix[0][i] = 0;
+
+		// we iterate on items
+		for (int i = 1; i <= NB_ITEMS; i++) {
+		  // we iterate on each capacity
+		  for (int j = 0; j <= capacity; j++) {
+		    if (items[i - 1].getCalories() > j)
+		      matrix[i][j] = matrix[i-1][j];
+		    else
+		      // we maximize value at this rank in the matrix
+		      matrix[i][j] = Math.max(matrix[i-1][j], matrix[i-1][j - items[i-1].getCalories()] +
+		                              items[i-1].getProtein());
+		  }
+		}
+		
+		int res = matrix[NB_ITEMS][capacity];
+		int w = capacity;
+		ArrayList<Item> itemsSolution = new ArrayList<>();
+
+		for (int i = NB_ITEMS; i > 0  &&  res > 0; i--) {
+		  if (res != matrix[i-1][w]) {
+		    itemsSolution.add(items[i-1]);
+		    // we remove items value and weight
+		    res -= items[i-1].getProtein();
+		    w -= items[i-1].getCalories();
+		  }
+		}
+		
+		int calCount = 0;
+	    for(Item a : itemsSolution){
+			System.out.println(a);
+			calCount += a.getCalories();
+	    }
+		
+		return new Solution(itemsSolution, matrix[NB_ITEMS][capacity], calCount);
 		
 	}
 
