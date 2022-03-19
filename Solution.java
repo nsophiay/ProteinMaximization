@@ -38,8 +38,11 @@ public class Solution {
 	public String toString(){
 		String x = "";
 		for(Item a : included)
-			x += a;
-		return x;
+			x += a.getName() + " (" + a.getCalories() + " calories and " + a.getProtein() + "g of protein)\n";
+		
+		String endSentence = "For a total of " + this.getMaxProtein() + "g in " + this.getFinalCalCount() + " calories";
+		
+		return x + endSentence;
 	}
 
 
