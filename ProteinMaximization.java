@@ -44,7 +44,8 @@ public class ProteinMaximization {
 
 		Solution s = knapsack(capacity, items);
 		System.out.println(s);
-		//System.out.println("For a total of " + s.getMaxProtein() + "g in " + s.getFinalCalCount() + " calories");
+		
+		input.close();
 
 	}
 
