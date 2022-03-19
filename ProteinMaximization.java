@@ -1,6 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class ProteinMaximization {
@@ -8,16 +7,15 @@ public class ProteinMaximization {
 	public static void main(String[] args) {
 
 		Item[] items = {
-				new Item("Yogurt", 100, 10),
-				new Item("Egg", 70, 7),
-				new Item("Deli meat", 80, 16),
-				new Item("Salmon", 100, 21),
-				new Item("Chicken breast", 110, 31),
-				new Item("Whey", 110, 25),
-				new Item("Tofu", 130, 16),
-				new Item("Greek yogurt", 100, 18),
-				new Item("Cottage cheese", 110, 14),
-				new Item("Skyr", 86, 16)
+				new Item("Yogurt", 60, 10.0, 175),
+				new Item("Egg", 70, 7.0, 50),
+				new Item("Deli meat, chicken breast", 90, 16.0, 100),
+				new Item("Salmon", 228, 31.8, 125),
+				new Item("Chicken breast", 260, 46.4, 150),
+				new Item("Whey protein powder", 144, 36, 40),
+				new Item("Extra firm tofu", 193, 23.2, 175),
+				new Item("Cottage cheese 1%", 100, 14, 125),
+				new Item("Plain skyr", 157, 28.6, 250)
 		};
 
 		Scanner input = new Scanner(System.in);
@@ -75,7 +73,7 @@ public class ProteinMaximization {
 
 		int NB_ITEMS = items.length;
 		// we use a matrix to store the max value at each n-th item
-		int[][] matrix = new int[NB_ITEMS + 1][capacity + 1];
+		double[][] matrix = new double[NB_ITEMS + 1][capacity + 1];
 		
 		//---------Matrix---------//
 		//   0 1 2 3 4 ... capacity
@@ -107,7 +105,7 @@ public class ProteinMaximization {
 			}
 		}
 
-		int maxProtein = matrix[NB_ITEMS][capacity];
+		double maxProtein = matrix[NB_ITEMS][capacity];
 		int calorieLimit = capacity;
 		int calCount = 0;
 		ArrayList<Item> itemsSolution = new ArrayList<>();

@@ -3,16 +3,18 @@ public class Item {
 
 	private String name;
 	private int calories; // per serving
-	private int protein; // per serving
+	private double protein; // per serving
+	private int serving;
 	
-	public Item(String n, int c, int p){
+	public Item(String n, int c, double p, int s){
 		name = n;
 		calories = c;
 		protein = p;
+		serving = s;
 	}
 	
 	public String toString(){
-		return name + ", " + calories + " calories for " + protein + " grams of protein";
+		return name + ", " + calories + " calories for " + protein + " grams of protein (serving of " + serving + " grams)";
 	}
 
 	public String getName() {
@@ -31,12 +33,20 @@ public class Item {
 		this.calories = calories;
 	}
 
-	public int getProtein() {
+	public double getProtein() {
 		return protein;
 	}
 
-	public void setProtein(int protein) {
+	public void setProtein(double protein) {
 		this.protein = protein;
+	}
+
+	public int getServing() {
+		return serving;
+	}
+
+	public void setServing(int serving) {
+		this.serving = serving;
 	}
 	
 }
